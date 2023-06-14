@@ -13,10 +13,6 @@ namespace Bai15.Program
     class Manager
     {
         public delegate void ValidateFunc<T>(string input, out T output);
-        public delegate void ValidateFuncString(string input, out string output);
-        public delegate void ValidateFuncInt(string input, out int output);
-        public delegate void ValidateFuncDouble(string input, out double output);
-                        
 
         public List<Department> departments;
         public List<Student> students;
@@ -38,7 +34,7 @@ namespace Bai15.Program
 
         ReadUserAction:
 
-            ReadData(new ValidateFunc<UserAction>(ValidateUserAction), out UserAction action,
+            ReadData(ValidateUserAction, out UserAction action,
                 "Employee Type must be Add,Find or Quit. Please re-enter valid action:");
             
             switch (action)
@@ -86,35 +82,35 @@ namespace Bai15.Program
         {
             //Read Id
             Console.WriteLine("Enter student ID:");
-            ReadData(new ValidateFunc<int>(ValidateId), out int ID, "ID must be number only. Please re-enter ID:");
+            ReadData(ValidateId, out int ID, "ID must be number only. Please re-enter ID:");
             
             //Read name
             Console.WriteLine("Please enter your name (10-50 characters):");
-            ReadData(new ValidateFunc<string>(ValidateName), out string Name, "Name must be 10-50 characters long. Please re-enter valid name:");
+            ReadData(ValidateName, out string Name, "Name must be 10-50 characters long. Please re-enter valid name:");
 
             //Read DOB
             Console.WriteLine("Enter student's birthday:");
-            ReadData(new ValidateFunc<string>(ValidateDateTime), out string DOB, "Please re-enter birthday in (dd/mm/yyyy) format:");
+            ReadData(ValidateDateTime, out string DOB, "Please re-enter birthday in (dd/mm/yyyy) format:");
 
             //Read Start Year
             Console.WriteLine("Enter student's start year:");
-            ReadData(new ValidateFunc<int>(ValidateInt), out int StartYear, "Please re-enter a valid number for start year:");
+            ReadData(ValidateInt, out int StartYear, "Please re-enter a valid number for start year:");
             
             //Read entrance score
             Console.WriteLine("Enter student's entrance score:");
-            ReadData(new ValidateFunc<double>(ValidateScore), out double EntranceScore, "Please re-enter valid entrance score:");
+            ReadData(ValidateScore, out double EntranceScore, "Please re-enter valid entrance score:");
             
             //Read Transcript
             Console.WriteLine("Enter student's number of records in transcript:");
-            ReadData(new ValidateFunc<int>(ValidateInt), out int numRecord, "Please re-enter valid integer:");
-
+            ReadData(ValidateInt, out int numRecord, "Please re-enter valid integer:");
+                
             Transcript transcript = new();
             for(int i = 0; i<numRecord; i++)
             {
                 Console.WriteLine("Semester:");
                 string sem = Console.ReadLine();
                 Console.WriteLine("GPA:");
-                ReadData(new ValidateFunc<double>(ValidateScore), out double GPA, "Please re-enter valid GPA:");
+                ReadData(ValidateScore, out double GPA, "Please re-enter valid GPA:");
                 transcript.AddRecord(sem, GPA);
             }
 
@@ -149,7 +145,7 @@ namespace Bai15.Program
             
 
             Console.WriteLine("Enter number of departments that student enrolled in:");
-            ReadData(new ValidateFunc<int>(ValidateInt), out int numDepartment, "Please re-enter valid integer:");
+            ReadData(ValidateInt, out int numDepartment, "Please re-enter valid integer:");
             List<string> departmentEnrolled = new List<string>();
             for(int i = 0; i < numDepartment; i++)
             {
