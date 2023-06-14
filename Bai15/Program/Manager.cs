@@ -4,9 +4,7 @@ using Bai15.Students;
 using Bai15.Enums;
 using System.Globalization;
 using Bai15.Transcripts;
-using System.Transactions;
-using System.ComponentModel;
-using System;
+
 
 namespace Bai15.Program
 {
