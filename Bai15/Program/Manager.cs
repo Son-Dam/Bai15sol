@@ -28,10 +28,6 @@ namespace Bai15.Program
                 "Type Remove or 1 to remove student by Id\n" +
                 "Type Quit or 2 to quit the program.");
 
-            string input;
-
-        ReadUserAction:
-
             ReadData(ValidateUserAction, out UserAction action,
                 "Employee Type must be Add,Find or Quit. Please re-enter valid action:");
             
@@ -114,20 +110,8 @@ namespace Bai15.Program
 
             //Read student type
             Console.WriteLine("Is the student in service? (Type Yes or No)");
-            StudentIsInService studentIsInService;
-        ReadStudentType:
-            try
-            {
-                string input = Console.ReadLine();
-                if (!Enum.TryParse(input, true, out studentIsInService))
-                    throw new Exception("Invalid input");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Please enter yes or no only:");
-                goto ReadStudentType;
-            }
+            ReadData(ValidateStudentType, out StudentIsInService studentIsInService, "Please enter yes or no only:");
+                    
             Student student;
             switch (studentIsInService)
             {
@@ -139,8 +123,7 @@ namespace Bai15.Program
                 default:
                     student = new Student(ID, Name, DOB, StartYear, EntranceScore, transcript);
                     break;
-            }
-            
+            }            
 
             Console.WriteLine("Enter number of departments that student enrolled in:");
             ReadData(ValidateInt, out int numDepartment, "Please re-enter valid integer:");
@@ -153,6 +136,12 @@ namespace Bai15.Program
             students.Add(student);
             AddStudent(student, departmentEnrolled);
             Console.WriteLine("student added successfully!");
+        }
+
+        private void ValidateStudentType(string input, out StudentIsInService studentIsInService)
+        {
+            if (!Enum.TryParse(input, true, out studentIsInService))
+                throw new Exception("Invalid input");
         }
 
         public void Print()
@@ -212,6 +201,7 @@ namespace Bai15.Program
             }
             return dict;
         }
+
         public Dictionary<Department,List<Student>> GetStudentWith8GPAOrAbove(){
             Dictionary<Department, List<Student>> dict = new();
             ;
@@ -221,6 +211,7 @@ namespace Bai15.Program
             }
             return dict;
         }
+
         public Dictionary<Department, Dictionary<int, int>> GetNumStudentByStartYearStats()
         {
             Dictionary<Department, Dictionary<int, int>> dict = new();
@@ -247,7 +238,6 @@ namespace Bai15.Program
                 goto start;
             }
         }
-
 
         void ValidateUserAction(string input, out UserAction action)
         {
@@ -283,6 +273,5 @@ namespace Bai15.Program
             if (!double.TryParse(input, out num))
                 throw new Exception("The score must be a number (can be decimal).");
         }
-
     }
 }
