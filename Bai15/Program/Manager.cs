@@ -6,11 +6,13 @@ using System.Globalization;
 using Bai15.Transcripts;
 using System.Transactions;
 using System.ComponentModel;
+using System;
 
 namespace Bai15.Program
 {
     class Manager
     {
+        public delegate void ValidateFunc<T>(string input, out T output);
         public delegate void ValidateFuncString(string input, out string output);
         public delegate void ValidateFuncInt(string input, out int output);
         public delegate void ValidateFuncDouble(string input, out double output);
@@ -35,20 +37,10 @@ namespace Bai15.Program
             string input;
 
         ReadUserAction:
-            UserAction action;
 
-            try
-            {
-                input = Console.ReadLine();
-                if (!Enum.TryParse(input, true, out action))
-                    throw new Exception("Invalid User Action");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Employee Type must be Add,Find or Quit. Please re-enter valid action:");
-                goto ReadUserAction;
-            }
+            ReadData(new ValidateFunc<UserAction>(ValidateUserAction), out UserAction action,
+                "Employee Type must be Add,Find or Quit. Please re-enter valid action:");
+            
             switch (action)
             {
                 case UserAction.Add:
@@ -97,27 +89,27 @@ namespace Bai15.Program
         {
             //Read Id
             Console.WriteLine("Enter student ID:");
-            ReadData(new ValidateFuncInt(ValidateId), out int ID, "ID must be number only. Please re-enter ID:");
+            ReadData(new ValidateFunc<int>(ValidateId), out int ID, "ID must be number only. Please re-enter ID:");
             
             //Read name
             Console.WriteLine("Please enter your name (10-50 characters):");
-            ReadData(new ValidateFuncString(ValidateName), out string Name, "Name must be 10-50 characters long. Please re-enter valid name:");
+            ReadData(new ValidateFunc<string>(ValidateName), out string Name, "Name must be 10-50 characters long. Please re-enter valid name:");
 
             //Read DOB
             Console.WriteLine("Enter student's birthday:");
-            ReadData(new ValidateFuncString(ValidateDateTime), out string DOB, "Please re-enter birthday in (dd/mm/yyyy) format:");
+            ReadData(new ValidateFunc<string>(ValidateDateTime), out string DOB, "Please re-enter birthday in (dd/mm/yyyy) format:");
 
             //Read Start Year
             Console.WriteLine("Enter student's start year:");
-            ReadData(new ValidateFuncInt(ValidateInt), out int StartYear, "Please re-enter a valid number for start year:");
+            ReadData(new ValidateFunc<int>(ValidateInt), out int StartYear, "Please re-enter a valid number for start year:");
             
             //Read entrance score
             Console.WriteLine("Enter student's entrance score:");
-            ReadData(new ValidateFuncDouble(ValidateScore), out double EntranceScore, "Please re-enter valid entrance score:");
+            ReadData(new ValidateFunc<double>(ValidateScore), out double EntranceScore, "Please re-enter valid entrance score:");
             
             //Read Transcript
             Console.WriteLine("Enter student's number of records in transcript:");
-            ReadData(new ValidateFuncInt(ValidateInt), out int numRecord, "Please re-enter valid integer:");
+            ReadData(new ValidateFunc<int>(ValidateInt), out int numRecord, "Please re-enter valid integer:");
 
             Transcript transcript = new();
             for(int i = 0; i<numRecord; i++)
@@ -125,7 +117,7 @@ namespace Bai15.Program
                 Console.WriteLine("Semester:");
                 string sem = Console.ReadLine();
                 Console.WriteLine("GPA:");
-                ReadData(new ValidateFuncDouble(ValidateScore), out double GPA, "Please re-enter valid GPA:");
+                ReadData(new ValidateFunc<double>(ValidateScore), out double GPA, "Please re-enter valid GPA:");
                 transcript.AddRecord(sem, GPA);
             }
 
@@ -160,7 +152,7 @@ namespace Bai15.Program
             
 
             Console.WriteLine("Enter number of departments that student enrolled in:");
-            ReadData(new ValidateFuncInt(ValidateInt), out int numDepartment, "Please re-enter valid integer:");
+            ReadData(new ValidateFunc<int>(ValidateInt), out int numDepartment, "Please re-enter valid integer:");
             List<string> departmentEnrolled = new List<string>();
             for(int i = 0; i < numDepartment; i++)
             {
@@ -249,10 +241,8 @@ namespace Bai15.Program
             return dict;
         }
 
-
-        public static void ReadData(ValidateFuncString validateFunc, out string output, string exceptionMessage)
+        public static void ReadData<T>(ValidateFunc<T> validateFunc,out T output,string exceptionMessage)
         {
-
         start:
             try
             {
@@ -267,37 +257,11 @@ namespace Bai15.Program
             }
         }
 
-        public static void ReadData(ValidateFuncInt validateFunc, out int output, string exceptionMessage)
-        {
 
-        start:
-            try
-            {
-                string input = Console.ReadLine();
-                validateFunc(input, out output);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(exceptionMessage);
-                goto start;
-            }
-        }
-        public static void ReadData(ValidateFuncDouble validateFunc, out double output, string exceptionMessage)
+        void ValidateUserAction(string input, out UserAction action)
         {
-
-        start:
-            try
-            {
-                string input = Console.ReadLine();
-                validateFunc(input, out output);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(exceptionMessage);
-                goto start;
-            }
+            if (!Enum.TryParse(input, true, out action))
+                throw new Exception("Invalid User Action");
         }
 
         void ValidateId(string input, out int Id)
