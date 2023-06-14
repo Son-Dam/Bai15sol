@@ -46,10 +46,7 @@ namespace Bai15.Program
                 case UserAction.Add:
                     AddStudent();
                     break;
-
-
                 case UserAction.Print:
-                ReadEmployeeType:
                     Print();
                     break;
                 case UserAction.Quit:
@@ -240,7 +237,7 @@ namespace Bai15.Program
             }
             return dict;
         }
-
+        
         public static void ReadData<T>(ValidateFunc<T> validateFunc,out T output,string exceptionMessage)
         {
         start:
