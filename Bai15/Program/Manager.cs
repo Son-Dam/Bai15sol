@@ -14,10 +14,12 @@ namespace Bai15.Program
 
         public List<Department> departments;
         public List<Student> students;
+
         public Manager() {
             departments = new List<Department>();
             students = new List<Student>();
         }
+
         public void Run()
         {
             bool quitting = false;
@@ -28,7 +30,7 @@ namespace Bai15.Program
                 "Type Remove or 1 to remove student by Id\n" +
                 "Type Quit or 2 to quit the program.");
 
-            ReadData(ValidateUserAction, out UserAction action,
+            ReadInput(ValidateUserAction, out UserAction action,
                 "Employee Type must be Add,Find or Quit. Please re-enter valid action:");
             
             switch (action)
@@ -47,6 +49,7 @@ namespace Bai15.Program
             }
             if (!quitting) goto start;
         }
+
         private void AddStudent(Student student, string departmentName)
         {
             foreach (Department d in departments)
@@ -62,12 +65,12 @@ namespace Bai15.Program
             department.AddStudent(student);
             departments.Add(department);
         }
+
         public void AddStudent(Student student, List<string> departmentNames)
         {   
             students.Add(student);
             foreach(string departmentName in departmentNames)
-            {
-                
+            {                
                 AddStudent(student, departmentName);
             }
             
@@ -76,27 +79,27 @@ namespace Bai15.Program
         {
             //Read Id
             Console.WriteLine("Enter student ID:");
-            ReadData(ValidateId, out int ID, "ID must be number only. Please re-enter ID:");
+            ReadInput(ValidateId, out int ID, "ID must be number only. Please re-enter ID:");
             
             //Read name
             Console.WriteLine("Please enter your name (10-50 characters):");
-            ReadData(ValidateName, out string Name, "Name must be 10-50 characters long. Please re-enter valid name:");
+            ReadInput(ValidateName, out string Name, "Name must be 10-50 characters long. Please re-enter valid name:");
 
             //Read DOB
             Console.WriteLine("Enter student's birthday:");
-            ReadData(ValidateDateTime, out string DOB, "Please re-enter birthday in (dd/mm/yyyy) format:");
+            ReadInput(ValidateDateTime, out string DOB, "Please re-enter birthday in (dd/mm/yyyy) format:");
 
             //Read Start Year
             Console.WriteLine("Enter student's start year:");
-            ReadData(ValidateInt, out int StartYear, "Please re-enter a valid number for start year:");
+            ReadInput(ValidateInt, out int StartYear, "Please re-enter a valid number for start year:");
             
             //Read entrance score
             Console.WriteLine("Enter student's entrance score:");
-            ReadData(ValidateScore, out double EntranceScore, "Please re-enter valid entrance score:");
+            ReadInput(ValidateScore, out double EntranceScore, "Please re-enter valid entrance score:");
             
             //Read Transcript
             Console.WriteLine("Enter student's number of records in transcript:");
-            ReadData(ValidateInt, out int numRecord, "Please re-enter valid integer:");
+            ReadInput(ValidateInt, out int numRecord, "Please re-enter valid integer:");
                 
             Transcript transcript = new();
             for(int i = 0; i<numRecord; i++)
@@ -104,13 +107,13 @@ namespace Bai15.Program
                 Console.WriteLine("Semester:");
                 string sem = Console.ReadLine();
                 Console.WriteLine("GPA:");
-                ReadData(ValidateScore, out double GPA, "Please re-enter valid GPA:");
+                ReadInput(ValidateScore, out double GPA, "Please re-enter valid GPA:");
                 transcript.AddRecord(sem, GPA);
             }
 
             //Read student type
             Console.WriteLine("Is the student in service? (Type Yes or No)");
-            ReadData(ValidateStudentType, out StudentIsInService studentIsInService, "Please enter yes or no only:");
+            ReadInput(ValidateStudentType, out StudentIsInService studentIsInService, "Please enter yes or no only:");
                     
             Student student;
             switch (studentIsInService)
@@ -126,7 +129,7 @@ namespace Bai15.Program
             }            
 
             Console.WriteLine("Enter number of departments that student enrolled in:");
-            ReadData(ValidateInt, out int numDepartment, "Please re-enter valid integer:");
+            ReadInput(ValidateInt, out int numDepartment, "Please re-enter valid integer:");
             List<string> departmentEnrolled = new List<string>();
             for(int i = 0; i < numDepartment; i++)
             {
@@ -158,8 +161,7 @@ namespace Bai15.Program
             {
                 if (student.Id == Id) return !(student is StudentInService);
             }
-            throw new StudentNotFoundException();
-            
+            throw new StudentNotFoundException();          
         }
 
         public Dictionary<Department, Student> GetValedictorians()
@@ -223,7 +225,7 @@ namespace Bai15.Program
             return dict;
         }
         
-        public static void ReadData<T>(ValidateFunc<T> validateFunc,out T output,string exceptionMessage)
+        public static void ReadInput<T>(ValidateFunc<T> validateFunc,out T output,string exceptionMessage)
         {
         start:
             try
